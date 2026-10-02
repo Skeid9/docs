@@ -1,0 +1,27 @@
+---
+title: Authentication
+description: API keys, headers, and auth errors.
+---
+
+# Authentication
+
+Every API call needs a bearer key.
+
+```bash
+curl https://api.refuseless.dev/v1/models \
+  -H "Authorization: Bearer $REFUSELESS_API_KEY"
+```
+
+- Header: `Authorization: Bearer <key>`
+- No key → `401 invalid_key` / `Missing bearer API key.`
+- Bad key → `401 invalid_key` / `Invalid API key.`
+
+<Warning>
+Never ship keys in client-side code. Call Refuseless from your server and
+keep keys in environment variables or a secret store.
+</Warning>
+
+Out of credits mid-request? A non-streamed call returns `402
+insufficient_credits`. A stream emits a
+`{"error": {"code": "insufficient_credits"}}` event and stops. Top up and
+retry — see [Errors](/guides/errors).

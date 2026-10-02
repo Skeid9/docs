@@ -1,0 +1,42 @@
+---
+title: "Quickstart"
+description: "Make your first Refuseless request in under a minute."
+---
+
+# Quickstart
+
+Get a key from the console, then hit chat completions.
+
+## 1. Get an API key
+
+Create a key in the console. It goes in the `Authorization` header as a bearer token.
+
+## 2. List the lineup
+
+```bash
+curl https://api.refuseless.dev/v1/models \
+  -H "Authorization: Bearer $REFUSELESS_API_KEY"
+```
+
+## 3. Send a chat completion
+
+```bash
+curl https://api.refuseless.dev/v1/chat/completions \
+  -H "Authorization: Bearer $REFUSELESS_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "glm-5.3-refuseless",
+    "messages": [{"role": "user", "content": "Write a tight system prompt."}]
+  }'
+```
+
+## 4. Stream it
+
+Add `"stream": true` and read Server-Sent Events. Each event is `data: {...}` followed by `data: [DONE]`. See [Streaming](/guides/streaming).
+
+## Next steps
+
+- [Authentication](/authentication) — keys and error codes
+- [Models](/models) — the current lineup
+- [Chat completions](/api/chat-completions) — full request/response reference
+- [SDKs](/sdks) — OpenAI / Anthropic SDK drop-in

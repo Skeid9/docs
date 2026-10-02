@@ -1,0 +1,29 @@
+---
+title: Errors
+description: Status codes, error shapes, and retry guidance.
+---
+
+# Errors
+
+All errors share one shape:
+
+```json
+{ "error": { "code": "model_busy", "message": "Model is busy. Retry shortly.", "type": "api_error" } }
+```
+
+| Status | Code | Meaning | Retry? |
+| --- | --- | --- | --- |
+| 400 | `bad_request` | Missing `model` or non-JSON body | Fix request |
+| 401 | `invalid_key` | Missing / invalid API key | Fix key |
+| 402 | `insufficient_credits` | Out of credits | Top up |
+| 404 | `model_not_found` | Unknown model id | Fix id |
+| 429 | `model_busy` | Model busy, `retry-after: 15` | Back off |
+| 429 | `model_warming` | Cold pod starting, `retry-after: 30` | Back off |
+| 502 | `upstream_error` | Upstream returned / unreachable | Retry with backoff |
+| 503 | `gateway_down` / `gateway_error` | Billing/gateway unreachable | Retry with backoff |
+| 503 | `model_unavailable` / `worker_unavailable` | No capacity right now | Retry with backoff |
+
+<Note>
+On reseller-backed models the upstream error body is cloaked to a generic
+`model_unavailable` so provider details never leak.
+</Note>

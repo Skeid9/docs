@@ -1,0 +1,45 @@
+---
+title: Text completions
+description: POST /v1/completions — legacy prompt endpoint adapted to chat.
+---
+
+# POST /v1/completions
+
+Legacy text-completions endpoint. It adapts `prompt` → chat messages and
+delegates to chat completions, then translates the result back.
+
+```
+POST https://api.refuseless.dev/v1/completions
+```
+
+## Request
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `model` | string | Required |
+| `prompt` | string / string[] | Joined with `\n` when an array |
+| `max_tokens` | number | Default `1024` |
+| `stream` | boolean | `true` returns legacy SSE chunks |
+
+## Response
+
+```json
+{
+  "id": "cmpl-abc123",
+  "object": "text_completion",
+  "created": 1700000000,
+  "model": "glm-5.3-refuseless",
+  "choices": [{ "index": 0, "text": "…", "finish_reason": "stop" }],
+  "usage": { "prompt_tokens": 8, "completion_tokens": 64, "total_tokens": 72 }
+}
+```
+
+Differences from chat:
+
+- Chunks carry `text` (from `delta.content`), not `delta`.
+- `tool_calls` finish reasons are mapped to `stop` — there is no
+  tool-calling or reasoning channel here. Use [chat
+  completions](/api/chat-completions) for tools.
+- Usage-only chunks are skipped in the stream.
+
+Prefer chat completions for new integrations.

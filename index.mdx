@@ -1,0 +1,24 @@
+---
+title: "Introduction"
+description: "OpenAI-compatible hosted inference for refusal-removed open weights."
+---
+
+# Refuseless API
+
+Refuseless hosts a named lineup of abliterated open-weight models behind an OpenAI-compatible API. If your tooling speaks OpenAI chat completions, it speaks Refuseless — change the base URL, set the model id, use your key.
+
+**Base URL**
+
+```text
+https://api.refuseless.dev/v1
+```
+
+**What you get**
+
+- `POST /v1/chat/completions` — chat completions, streaming + tools
+- `POST /v1/completions` — legacy text completions (adapts to chat)
+- `GET /v1/models` / `GET /v1/models/{model}` — lineup catalog
+- `reasoning_content` passthrough on reasoning models
+- Credit-based billing with pre-authorization per request
+
+New here? Start with the [Quickstart](/quickstart).

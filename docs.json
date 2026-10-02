@@ -1,0 +1,73 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Refuseless",
+  "colors": {
+    "primary": "#C8102E",
+    "light": "#C8102E",
+    "dark": "#C8102E"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "groups": [
+      {
+        "group": "Start",
+        "pages": [
+          "index",
+          "quickstart",
+          "authentication",
+          "models"
+        ]
+      },
+      {
+        "group": "API reference",
+        "pages": [
+          "api/chat-completions",
+          "api/text-completions",
+          "api/models"
+        ]
+      },
+      {
+        "group": "Guides",
+        "pages": [
+          "guides/streaming",
+          "guides/tools",
+          "guides/reasoning",
+          "guides/errors",
+          "sdks"
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "href": "https://refuseless.dev/console",
+        "label": "Console"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Get API key",
+      "href": "https://refuseless.dev/signup"
+    }
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
+  },
+  "description": "OpenAI-compatible hosted inference for a named lineup of refusal-removed open weights.",
+  "api": {}
+}

@@ -1,0 +1,48 @@
+---
+title: Models API
+description: GET /v1/models and GET /v1/models/{model}.
+---
+
+# Models API
+
+## List models
+
+```
+GET https://api.refuseless.dev/v1/models
+```
+
+```json
+{
+  "object": "list",
+  "data": [
+    { "id": "glm-5.3-refuseless", "object": "model", "created": 1700000000, "owned_by": "refuseless" },
+    { "id": "glm-5.3-flash-refuseless", "object": "model", "created": 1700000000, "owned_by": "refuseless" }
+  ]
+}
+```
+
+A live empty catalog is the catalog — the local fallback only applies when
+the billing service is unreachable.
+
+## Retrieve a model
+
+```
+GET https://api.refuseless.dev/v1/models/{model}
+```
+
+```json
+{
+  "id": "glm-5.3-refuseless",
+  "object": "model",
+  "created": 1700000000,
+  "owned_by": "refuseless"
+}
+```
+
+Unknown id → `404`:
+
+```json
+{
+  "error": { "code": "model_not_found", "message": "Unknown model '…'.", "type": "api_error" }
+}
+```

@@ -1,0 +1,27 @@
+---
+title: Reasoning
+description: reasoning_content and <think> handling.
+---
+
+# Reasoning
+
+Reasoning models stream `reasoning_content` deltas alongside `content`.
+Non-streamed calls return it on the message:
+
+```json
+{
+  "message": {
+    "role": "assistant",
+    "content": "Final answer…",
+    "reasoning_content": "Chain of thought…"
+  }
+}
+```
+
+Some checkpoints (R1-distill style) embed `<think>…</think>` inside
+`content` instead of a separate channel. The server splits it out: the
+`<think>` span is appended to `reasoning_content` and stripped from
+`content`, so you only ever render one thinking block.
+
+Render `reasoning_content` in a collapsible block and `content` as the
+answer. In streams both arrive as deltas — accumulate each separately.

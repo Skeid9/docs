@@ -1,0 +1,33 @@
+---
+title: Models
+description: The named Refuseless lineup.
+---
+
+# Models
+
+The lineup is named ids, not upstream checkpoints. Use the catalog id in
+`model` — the response always echoes your public id.
+
+| Model id | Best for |
+| --- | --- |
+| `glm-5.3-refuseless` | Frontier coding and cybersecurity. The most powerful open model for cyber tasks to date, refusals removed. |
+| `glm-5.3-flash-refuseless` | Cost-effective cyber intelligence. Near-frontier quality at much lower cost. |
+
+Benchmarks are illustrative: GLM 5.3 Abliterated posts DeepSWE 66.9,
+CyberGym 84.5, ExploitGym 105/130; Flash posts DeepSWE 63.4, Terminal-Bench
+2.1 84.3, Automation Bench 48.8.
+
+## Catalog endpoints
+
+```bash
+# List
+curl https://api.refuseless.dev/v1/models \
+  -H "Authorization: Bearer $REFUSELESS_API_KEY"
+
+# Describe one
+curl https://api.refuseless.dev/v1/models/glm-5.3-refuseless \
+  -H "Authorization: Bearer $REFUSELESS_API_KEY"
+```
+
+Unknown id → `404 model_not_found`. Full shapes: [Models
+API](/api/models).

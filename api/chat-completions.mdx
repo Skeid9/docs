@@ -1,0 +1,82 @@
+---
+title: Chat completions
+description: POST /v1/chat/completions — OpenAI-compatible chat endpoint.
+---
+
+# POST /v1/chat/completions
+
+OpenAI-compatible chat completions. Same request shape, same SSE streaming
+contract.
+
+```
+POST https://api.refuseless.dev/v1/chat/completions
+```
+
+## Request
+
+| Field | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `model` | string | Yes | Catalog id, e.g. `glm-5.3-refuseless` |
+| `messages` | array | Yes | OpenAI chat messages |
+| `max_tokens` / `max_completion_tokens` | number | No | Default `1024`. Clamped to your credit reservation. |
+| `stream` | boolean | No | Default `false`. `true` returns SSE. |
+| `tools` | array | No | OpenAI function-calling tools. Counted toward input reservation. |
+| `tool_choice` | object/string | No | Passed through |
+| `response_format` | object | No | Passed through |
+| stream extras | — | No | `stream_options: {"include_usage": true}` supported |
+
+`prompt_tokens` on the request is ignored — the server re-estimates.
+
+## Non-streamed response
+
+```json
+{
+  "id": "chatcmpl-abc123",
+  "object": "chat.completion",
+  "created": 1700000000,
+  "model": "glm-5.3-refuseless",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "…",
+        "tool_calls": [],
+        "reasoning_content": "…"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 12,
+    "completion_tokens": 64,
+    "total_tokens": 76
+  }
+}
+```
+
+- `content` is `null` when the turn is tool-calls only (OpenAI behavior).
+- `tool_calls` appears with `finish_reason: tool_calls`.
+- `reasoning_content` appears on reasoning models (also split out of
+  `<think>…</think>` content) — see [Reasoning](/guides/reasoning).
+- `usage.prompt_tokens_details.cached_tokens` appears when prompt caching
+  applies.
+
+## Example
+
+```bash
+curl https://api.refuseless.dev/v1/chat/completions \
+  -H "Authorization: Bearer $REFUSELESS_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "glm-5.3-refuseless",
+    "messages": [{"role": "user", "content": "Write a tight system prompt."}],
+    "max_tokens": 512
+  }'
+```
+
+## Errors
+
+`400` missing `model` · `401` bad key · `402` out of credits · `404`
+unknown model · `429` model busy / warming (honor `retry-after`) · `502/503`
+upstream or gateway trouble. Full table: [Errors](/guides/errors).

@@ -1,0 +1,47 @@
+---
+title: SDKs
+description: Drop the base URL into any OpenAI-compatible harness.
+---
+
+# SDKs
+
+Point any OpenAI-compatible client at `https://api.refuseless.dev/v1`.
+
+## Python
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://api.refuseless.dev/v1",
+    api_key="YOUR_KEY",
+)
+resp = client.chat.completions.create(
+    model="glm-5.3-refuseless",
+    messages=[{"role": "user", "content": "Write a tight system prompt."}],
+)
+print(resp.choices[0].message.content)
+```
+
+## Node / TypeScript
+
+```typescript
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  baseURL: "https://api.refuseless.dev/v1",
+  apiKey: process.env.REFUSELESS_API_KEY,
+});
+
+const resp = await client.chat.completions.create({
+  model: "glm-5.3-refuseless",
+  messages: [{ role: "user", content: "Write a tight system prompt." }],
+});
+console.log(resp.choices[0].message.content);
+```
+
+## Agent harnesses
+
+Anything that accepts a custom `baseURL` works unchanged — Claude Code,
+Codex, OpenClaw, and similar OpenAI-compatible harnesses. Set the base URL,
+set the model id from the [lineup](/models), stream as usual.

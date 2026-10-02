@@ -1,0 +1,37 @@
+---
+title: Streaming
+description: Server-sent events, usage chunks, and credit cutoffs.
+---
+
+# Streaming
+
+Set `"stream": true` to get `text/event-stream`. Frames are `data: {...}`
+lines terminated by `data: [DONE]`. Non-`data:` lines never appear.
+
+```bash
+curl -N https://api.refuseless.dev/v1/chat/completions \
+  -H "Authorization: Bearer $REFUSELESS_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Accept: text/event-stream" \
+  -d '{
+    "model": "glm-5.3-refuseless",
+    "messages": [{"role": "user", "content": "Count to 5."}],
+    "stream": true
+  }'
+```
+
+Notes:
+
+- Raw upstream chunks pass through untouched, including `reasoning_content`
+  deltas, so you can render thinking live.
+- `stream_options: {"include_usage": true}` is accepted and forwarded.
+- The `model` field always echoes your public id.
+- If credits run out mid-stream you get a terminal error event, then
+  `[DONE]`:
+
+```json
+{ "error": { "code": "insufficient_credits", "message": "Credits ran out. Generation stopped." } }
+```
+
+- Disconnecting aborts the generation server-side; you are billed only for
+  tokens produced.

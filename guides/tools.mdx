@@ -1,0 +1,39 @@
+---
+title: Function calling
+description: Tools, tool_choice, and tool_calls round-trips.
+---
+
+# Function calling
+
+Chat completions accept the usual OpenAI `tools` and `tool_choice` fields
+and return `tool_calls` with `finish_reason: tool_calls`. Tool definitions
+count toward the input-token reservation, so large schemas reserve more
+credit up front.
+
+```bash
+curl https://api.refuseless.dev/v1/chat/completions \
+  -H "Authorization: Bearer $REFUSELESS_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "glm-5.3-refuseless",
+    "messages": [{"role": "user", "content": "What is the weather in Paris?"}],
+    "tools": [{
+      "type": "function",
+      "function": {
+        "name": "get_weather",
+        "description": "Get the weather for a city",
+        "parameters": {
+          "type": "object",
+          "properties": { "city": {"type": "string"} },
+          "required": ["city"]
+        }
+      }]
+  }'
+```
+
+The assistant turn comes back with `content: null` and a `tool_calls`
+array. Execute the function yourself, append a `tool`-role message with the
+result, and call again — the standard OpenAI loop, unchanged.
+
+The legacy [/v1/completions](/api/text-completions) endpoint has no tool
+channel; use chat for tools.
